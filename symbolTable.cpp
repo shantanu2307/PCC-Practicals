@@ -1,6 +1,8 @@
 #include "bits/stdc++.h"
 using namespace std;
 
+unordered_map<int, int>lineTracker;
+
 class node {
 public:
 	string id, scope, type;
@@ -45,7 +47,19 @@ public:
 
 
 	bool validate(string id, string scope, string type, int ln) {
-		//Add validation logic here
+		if (lineTracker.count(ln)) {
+			return 0;
+		}
+		int idx = hashFn(id);
+		node *start = head[idx];
+		while (start)
+		{
+			if (start->id == id && start->scope == scope) {
+				return 0;
+			}
+			start = start->next;
+		}
+		return 1;
 	}
 
 
@@ -57,11 +71,13 @@ public:
 		int idx = hashFn(id);
 		node *newNode = new node(id, scope, type, ln);
 		if (!head[idx]) {
+			lineTracker[ln] = 1;
 			head[idx] = newNode;
 			cout << id << " inserted" << endl;
 			return 1;
 		}
 		else {
+			lineTracker[ln] = 1;
 			node *start = head[idx];
 			head[idx] = newNode;
 			newNode->next = start;
@@ -101,9 +117,12 @@ public:
 		}
 		while (start != NULL) {
 			if (start->id == id) {
+				int x = start->lineNumber;
+				lineTracker.erase(lineTracker.find(x));
 				start->scope = s;
 				start->type = t;
 				start->lineNumber = l;
+				lineTracker[l] = 1;
 				return 1;
 			}
 			start = start->next;
@@ -123,6 +142,8 @@ public:
 		}
 		if (temp->id == id && temp->next == NULL) {
 			temp->next = NULL;
+			int x = temp->lineNumber;
+			lineTracker.erase(lineTracker.find(x));
 			delete temp;
 			return 1;
 		}
@@ -133,12 +154,16 @@ public:
 		if (temp->id == id && temp->next != NULL) {
 			par->next = temp->next;
 			temp->next = NULL;
+			int x = temp->lineNumber;
+			lineTracker.erase(lineTracker.find(x));
 			delete temp;
 			return 1;
 		}
 		else {
 			par->next = NULL;
 			temp->next = NULL;
+			int x = temp->lineNumber;
+			lineTracker.erase(lineTracker.find(x));
 			delete temp;
 			return 1;
 		}
