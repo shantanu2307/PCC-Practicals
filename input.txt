@@ -1,0 +1,16 @@
+1
+a LOCAL INTEGER 21
+
+3
+a LOCAL
+
+2
+a LOCAL STRING 23
+
+3
+a LOCAL
+
+4
+a LOCAL
+
+5

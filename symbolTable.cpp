@@ -87,7 +87,7 @@ public:
 		return 0;
 	}
 
-	string find(string id)
+	string find(string id, string scope)
 	{
 		int idx = hashFn(id);
 		node *start = head[idx];
@@ -95,7 +95,7 @@ public:
 			return "-1";
 		}
 		while (start != NULL) {
-			if (start->id == id)
+			if (start->id == id && start->scope == scope)
 			{
 				start->print();
 				return start->scope;
@@ -133,25 +133,25 @@ public:
 	}
 
 
-	bool deleteEntry(string id) {
+	bool deleteEntry(string id, string scope) {
 		int idx = hashFn(id);
 		node *par = head[idx];
 		node *temp = head[idx];
 		if (!temp) {
 			return 0;
 		}
-		if (temp->id == id && temp->next == NULL) {
+		if (temp->id == id && temp->scope == scope && temp->next == NULL) {
 			temp->next = NULL;
 			int x = temp->lineNumber;
 			lineTracker.erase(lineTracker.find(x));
 			delete temp;
 			return 1;
 		}
-		while (temp->id != id && temp->next != NULL) {
+		while ((temp->id != id && temp->scope != scope) && temp->next != NULL) {
 			par = temp;
 			temp = temp->next;
 		}
-		if (temp->id == id && temp->next != NULL) {
+		if (temp->id == id && temp->scope == scope && temp->next != NULL) {
 			par->next = temp->next;
 			temp->next = NULL;
 			int x = temp->lineNumber;
@@ -159,7 +159,7 @@ public:
 			delete temp;
 			return 1;
 		}
-		else {
+		else if (temp->id == id && temp->scope == scope) {
 			par->next = NULL;
 			temp->next = NULL;
 			int x = temp->lineNumber;
@@ -181,8 +181,66 @@ int main()
 	freopen("input.txt", "r", stdin);
 	freopen("output.txt", "w", stdout);
 #endif
-
 	symbolTable st;
+	cout << "MENU" << endl;
+	cout << "1. Insert" << endl;
+	cout << "2. Modify" << endl;
+	cout << "3. Find" << endl;
+	cout << "4. Delete" << endl;
+	cout << "5. Exit" << endl;
+	cout << endl;
+	while (1) {
+		int opt = 0;
+		cin >> opt;
+		switch (opt) {
+		case 1: {
+			string id, scope, type;
+			int ln ;
+			cin >> id >> scope >> type >> ln;
+			st.insert(id, scope, type, ln);
+			cout << endl;
+			break;
+		}
+		case 2: {
+			string id, scope, type;
+			int ln ;
+			cin >> id >> scope >> type >> ln;
+			st.modify(id, scope, type, ln);
+			cout << "Modified Successfully" << endl;
+			break;
+		}
+		case 3: {
+			string id, scope;
+			cin >> id >> scope;
+			st.find(id, scope);
+			cout << endl;
+			break;
+		}
+		case 4: {
+			string id, scope;
+			cin >> id >> scope;
+			bool b = st.deleteEntry(id, scope);
+			if (b) {
+				cout << "Deleted Successfully" << endl;
+			}
+			else {
+				cout << "Failed to Delete" << endl;
+			}
+			cout << endl;
+			break;
+		}
+		case 5: {
+
+			cout << "Exitted Successfully" << endl;
+			return 0;
+		}
+		default: {
+
+			cout << "Choose another option" << endl;
+		}
+
+		}
+	}
 
 	return 0;
 }
