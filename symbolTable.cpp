@@ -43,7 +43,17 @@ public:
 		return asciiSum % 1000;
 	}
 
+
+	bool validate(string id, string scope, string type, int ln) {
+		//Add validation logic here
+	}
+
+
 	bool insert(string id, string scope, string type, int ln) {
+		if (!validate(id, scope, type, ln)) {
+			cout << "Can not insert! FAILURE" << endl;
+			return 0;
+		}
 		int idx = hashFn(id);
 		node *newNode = new node(id, scope, type, ln);
 		if (!head[idx]) {
