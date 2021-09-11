@@ -1,27 +1,27 @@
 #include "bits/stdc++.h"
 using namespace std;
-
-unordered_map<int, int>lineTracker;
-
 class node {
 public:
-	string id, scope, type;
+	string id, scope, type, value;
 	int lineNumber;
-	node *next;
+	node *next, *prev;
 	node()
 	{
 		next = NULL;
+		prev = NULL;
 	}
-	node(string key, string value, string type, int ln) {
+	node(string key, string scope, string type, string value, int ln) {
 		next = NULL;
+		prev = NULL;
 		id = key;
-		scope = value;
+		this->scope = scope;
 		this->type = type;
+		this->value=value;
 		lineNumber = ln;
 	}
 	void print()
 	{
-		cout << "Identifier Name:" << id << endl << "Type:" << type << endl << "Scope:" << scope << endl << "Line Number:" << lineNumber << endl;
+		cout << "Identifier Name:" << id << endl << "Value:" << value << endl << "Type:" << type << endl << "Scope:" << scope << endl << "Line Number:" << lineNumber << endl;
 	}
 };
 
@@ -47,9 +47,6 @@ public:
 
 
 	bool validate(string id, string scope, string type, int ln) {
-		if (lineTracker.count(ln)) {
-			return 0;
-		}
 		int idx = hashFn(id);
 		node *start = head[idx];
 		while (start)
@@ -63,24 +60,23 @@ public:
 	}
 
 
-	bool insert(string id, string scope, string type, int ln) {
+	bool insert(string id, string scope, string type, string value, int ln) {
 		if (!validate(id, scope, type, ln)) {
 			cout << "Can not insert! FAILURE" << endl;
 			return 0;
 		}
 		int idx = hashFn(id);
-		node *newNode = new node(id, scope, type, ln);
+		node *newNode = new node(id, scope, type, value, ln);
 		if (!head[idx]) {
-			lineTracker[ln] = 1;
 			head[idx] = newNode;
 			cout << id << " inserted" << endl;
 			return 1;
 		}
 		else {
-			lineTracker[ln] = 1;
 			node *start = head[idx];
 			head[idx] = newNode;
 			newNode->next = start;
+			start->prev = newNode;
 			cout << id << " inserted" << endl;
 			return 1;
 		}
@@ -92,6 +88,7 @@ public:
 		int idx = hashFn(id);
 		node *start = head[idx];
 		if (!start) {
+		    cout << "Identifier doesn't exist" <<endl;
 			return "-1";
 		}
 		while (start != NULL) {
@@ -102,12 +99,13 @@ public:
 			}
 			start = start->next;
 		}
+		cout << "Identifier doesn't exist" <<endl;
 		return "-1";
 	}
 
 
 
-	bool modify(string id, string s, string t, int l)
+	bool modify(string id, string s, string t, string v, int l)
 	{
 		int indexValue = hashFn(id);
 		node* start = head[indexValue];
@@ -118,11 +116,10 @@ public:
 		while (start != NULL) {
 			if (start->id == id) {
 				int x = start->lineNumber;
-				lineTracker.erase(lineTracker.find(x));
 				start->scope = s;
 				start->type = t;
 				start->lineNumber = l;
-				lineTracker[l] = 1;
+				start->value=v;
 				return 1;
 			}
 			start = start->next;
@@ -135,40 +132,31 @@ public:
 
 	bool deleteEntry(string id, string scope) {
 		int idx = hashFn(id);
-		node *par = head[idx];
 		node *temp = head[idx];
-		if (!temp) {
-			return 0;
-		}
-		if (temp->id == id && temp->scope == scope && temp->next == NULL) {
-			temp->next = NULL;
-			int x = temp->lineNumber;
-			lineTracker.erase(lineTracker.find(x));
-			delete temp;
-			return 1;
-		}
-		while ((temp->id != id && temp->scope != scope) && temp->next != NULL) {
-			par = temp;
-			temp = temp->next;
-		}
-		if (temp->id == id && temp->scope == scope && temp->next != NULL) {
-			par->next = temp->next;
-			temp->next = NULL;
-			int x = temp->lineNumber;
-			lineTracker.erase(lineTracker.find(x));
-			delete temp;
-			return 1;
-		}
-		else if (temp->id == id && temp->scope == scope) {
-			par->next = NULL;
-			temp->next = NULL;
-			int x = temp->lineNumber;
-			lineTracker.erase(lineTracker.find(x));
-			delete temp;
-			return 1;
-		}
+	    while(temp!=NULL)
+	    {
+	        if(temp->id == id && temp->scope == scope)
+	        break;
+	        temp = temp->next;
+	    }
+	    node *par;
+	    if(temp == NULL)
 		return 0;
-
+		if(temp == head[idx])
+		{
+		    head[idx] = temp->next;
+		    if(temp->next != NULL)
+		       temp->next->prev = NULL; 
+		}
+		else
+		{
+		    par = temp->prev;
+		    par->next = temp->next;
+		    if(temp->next != NULL)
+		        temp->next->prev = par;
+		}
+		delete temp;
+        return 1;
 	}
 
 
@@ -194,18 +182,18 @@ int main()
 		cin >> opt;
 		switch (opt) {
 		case 1: {
-			string id, scope, type;
+			string id, scope, value = "No Value", type;
 			int ln ;
-			cin >> id >> scope >> type >> ln;
-			st.insert(id, scope, type, ln);
+			cin >> id >> scope >> type >> value >> ln;
+			st.insert(id, scope, type, value, ln);
 			cout << endl;
 			break;
 		}
 		case 2: {
-			string id, scope, type;
+			string id, scope, value, type;
 			int ln ;
-			cin >> id >> scope >> type >> ln;
-			st.modify(id, scope, type, ln);
+			cin >> id >> scope >> value >> type >> ln;
+			st.modify(id, scope, value, type, ln);
 			cout << "Modified Successfully" << endl;
 			break;
 		}
