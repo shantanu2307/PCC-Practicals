@@ -1,2 +1,1 @@
-# Added Collision Resoultion Through chaining
-# @SujCreate add more hashfunctions for different ways of hashing 
+### Symbol Table with Hashing and Chaining 
