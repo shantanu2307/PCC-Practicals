@@ -16,7 +16,7 @@ public:
 		id = key;
 		this->scope = scope;
 		this->type = type;
-		this->value=value;
+		this->value = value;
 		lineNumber = ln;
 	}
 	void print()
@@ -88,7 +88,7 @@ public:
 		int idx = hashFn(id);
 		node *start = head[idx];
 		if (!start) {
-		    cout << "Identifier doesn't exist" <<endl;
+			cout << "Identifier doesn't exist" << endl;
 			return "-1";
 		}
 		while (start != NULL) {
@@ -99,7 +99,7 @@ public:
 			}
 			start = start->next;
 		}
-		cout << "Identifier doesn't exist" <<endl;
+		cout << "Identifier doesn't exist" << endl;
 		return "-1";
 	}
 
@@ -119,7 +119,7 @@ public:
 				start->scope = s;
 				start->type = t;
 				start->lineNumber = l;
-				start->value=v;
+				start->value = v;
 				return 1;
 			}
 			start = start->next;
@@ -133,30 +133,30 @@ public:
 	bool deleteEntry(string id, string scope) {
 		int idx = hashFn(id);
 		node *temp = head[idx];
-	    while(temp!=NULL)
-	    {
-	        if(temp->id == id && temp->scope == scope)
-	        break;
-	        temp = temp->next;
-	    }
-	    node *par;
-	    if(temp == NULL)
-		return 0;
-		if(temp == head[idx])
+		while (temp != NULL)
 		{
-		    head[idx] = temp->next;
-		    if(temp->next != NULL)
-		       temp->next->prev = NULL; 
+			if (temp->id == id && temp->scope == scope)
+				break;
+			temp = temp->next;
+		}
+		node *par;
+		if (temp == NULL)
+			return 0;
+		if (temp == head[idx])
+		{
+			head[idx] = temp->next;
+			if (temp->next != NULL)
+				temp->next->prev = NULL;
 		}
 		else
 		{
-		    par = temp->prev;
-		    par->next = temp->next;
-		    if(temp->next != NULL)
-		        temp->next->prev = par;
+			par = temp->prev;
+			par->next = temp->next;
+			if (temp->next != NULL)
+				temp->next->prev = par;
 		}
 		delete temp;
-        return 1;
+		return 1;
 	}
 
 
@@ -194,7 +194,7 @@ int main()
 			int ln ;
 			cin >> id >> scope >> value >> type >> ln;
 			st.modify(id, scope, value, type, ln);
-			cout << "Modified Successfully" << endl;
+			cout << "Modified Successfully" << endl << endl;
 			break;
 		}
 		case 3: {
