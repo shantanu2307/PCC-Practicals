@@ -1,13 +1,21 @@
 #include "bits/stdc++.h"
 using namespace std;
 
+
+// Jenkins one at a time hash
 int hashFn(string id)
 {
-	int asciiSum = 0;
-	for (int i = 0; i < id.size(); i++) {
-		asciiSum += (id[i] * id[i] + 1000) % 1000;
+	uint32_t hash, i;
+	for (hash = i = 0; i < id.size(); ++i)
+	{
+		hash += id[i];
+		hash += (hash << 10);
+		hash ^= (hash >> 6);
 	}
-	return (asciiSum + 1000) % 1000;
+	hash += (hash << 3);
+	hash ^= (hash >> 11);
+	hash += (hash << 15);
+	return (hash) % 1000;
 }
 
 
