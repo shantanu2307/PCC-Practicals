@@ -1,5 +1,16 @@
 #include "bits/stdc++.h"
 using namespace std;
+
+int hashFn(string id)
+{
+	int asciiSum = 0;
+	for (int i = 0; i < id.size(); i++) {
+		asciiSum += (id[i] * id[i] + 1000) % 1000;
+	}
+	return (asciiSum + 1000) % 1000;
+}
+
+
 class node {
 public:
 	string id, scope, type, value;
@@ -27,6 +38,15 @@ public:
 
 class symbolTable
 {
+
+private:
+	int pow(int y) {
+		if (y & 1) {
+			return -1;
+		}
+		return 1;
+	}
+
 public:
 	node *head[1000];
 	symbolTable() {
@@ -34,15 +54,6 @@ public:
 		{
 			head[i] = NULL;
 		}
-	}
-
-	int hashFn(string id)
-	{
-		int asciiSum = 0;
-		for (int i = 0; i < id.size(); i++) {
-			asciiSum += id[i];
-		}
-		return asciiSum % 1000;
 	}
 
 
