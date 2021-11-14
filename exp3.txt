@@ -1,0 +1,8 @@
+%token STR NUM SEMICOLON
+stmts: stmt SEMICOLON stmts| stmt SEMICOLON| cond;
+stmt: STR
+| NUM
+;
+cond : 'if(' stmt ')' stmts ELIF;
+ELIF : 'else if (' stmt ')' stmts ELIF
+    | 'else(' stmt ')' stmts;
