@@ -17,7 +17,7 @@ int yyerror(char *s);
 /* Rule Section */
 %%
   
-ArithmeticExpression: E{
+exp: E{
   
          printf("\nResult=%d\n", $$);
   
