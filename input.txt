@@ -1,30 +1,7 @@
-1
-a LOCAL 21 INT 2
-
-1
-a LOCAL 23 INT 4
-
-1
-a GLOBAL 100 INT 3
-
-3
-a LOCAL
-
-3
-a GLOBAL
-
-2
-a GLOBAL 105 STRING 6
-
-3
-a GLOBAL
-
-4
-a LOCAL
-
-3
-a LOCAL
-
-5
-
-
+6
+MOV R
+Next: ADD R
+DCR R
+JNZ Next 
+STORE 2000 
+HALT
