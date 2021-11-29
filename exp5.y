@@ -25,7 +25,7 @@ ELIF : ELSE_IF  stmt stmts ELIF
 //driver code
 int main()
 {
-   printf("\nEnter the program. Only statements and consitionals are allowed\n");
+   printf("\nEnter the program. Only statements and conditionals are allowed\n");
   
    yyparse();
    return 0;
