@@ -1,1 +1,1 @@
-### Symbol Table with Hashing and Chaining 
+PCC Practicals 
